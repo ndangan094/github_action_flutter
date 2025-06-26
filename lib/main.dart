@@ -1,6 +1,4 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_structure/presentation/screens/chat_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -33,23 +31,17 @@ class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
 
   void _incrementCounter() {
-    // showCupertinoSheet(
-    //   context: context,
-    //   pageBuilder: (context) {
-    //     return Container();
-    //   },
+    setState(() {
+      _counter++;
+    });
+    // Navigator.push(
+    //   context,
+    //   CupertinoPageRoute(
+    //     builder: (context) {
+    //       return ChatScreen();
+    //     },
+    //   ),
     // );
-    // setState(() {
-    //   _counter++;
-    // });
-    Navigator.push(
-      context,
-      CupertinoPageRoute(
-        builder: (context) {
-          return ChatScreen();
-        },
-      ),
-    );
   }
 
   @override
