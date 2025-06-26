@@ -1,0 +1,24 @@
+name: Flutter Integration Test
+
+on:
+  pull_request:
+    branches:
+      - develop  # hoặc branch bạn muốn bảo vệ
+
+jobs:
+  integration_test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.32.0'  # hoặc version của bạn
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Run Integration Tests
+        run: flutter test integration_test/app_test.dart
