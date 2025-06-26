@@ -33,7 +33,7 @@ void main() {
     await tester.tap(find.byIcon(Icons.add));
     await tester.pump();
     expect(find.text('0'), findsNothing);
-    expect(find.text('2'), findsOneWidget);
+    expect(find.text('3'), findsOneWidget);
   });
 
   testWidgets("4", (WidgetTester tester) async {
@@ -53,6 +53,7 @@ void main() {
     await tester.pumpWidget(const MyApp());
     expect(find.text('0'), findsOneWidget);
     expect(find.text('1'), findsNothing);
+    await tester.tap(find.byIcon(Icons.add));
     await tester.tap(find.byIcon(Icons.add));
     await tester.tap(find.byIcon(Icons.add));
     await tester.tap(find.byIcon(Icons.add));
