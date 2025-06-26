@@ -10,15 +10,29 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      # 1. Checkout code từ repository
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-      - name: Setup Flutter
+      # 2. Thiết lập Java (cần thiết cho build Android)
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: 'gradle' # Cache Gradle dependencies
+
+      # 3. Thiết lập Flutter SDK
+      - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.32.0'  # hoặc version của bạn
+          flutter-version: '3.32.0' # Thay bằng phiên bản Flutter bạn đang dùng
+          channel: 'stable' # Hoặc 'beta', 'dev', 'master'
+          cache: true # Cache Flutter dependencies
 
-      - name: Install dependencies
-        run: flutter pub get
+      # 4. Lấy dependencies của Flutter
+      - name: Get Flutter dependencies
+        run: flutter pub
 
       - name: Run Integration Tests
         run: flutter test test/app_test.dart
