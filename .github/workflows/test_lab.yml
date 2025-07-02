@@ -36,10 +36,8 @@ jobs:
       - name: 🔨 Build debug APK
         run: flutter build apk --debug
 
-      - name: 🧪 Build integration test APK
-        run: |
-          flutter build apk --debug \
-            --target=test/app_test.dart
+      - name: 🧪 Build Test APK (AndroidTest via Gradle)
+        run: ./gradlew app:assembleAndroidTest
 
       - name: 🔑 Setup gcloud credentials
         uses: google-github-actions/auth@v2
