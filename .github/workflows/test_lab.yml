@@ -38,6 +38,7 @@ jobs:
 
       - name: 🧪 Build Test APK (AndroidTest via Gradle)
         run: ./gradlew app:assembleAndroidTest
+        working-directory: android
 
       - name: 🔑 Setup gcloud credentials
         uses: google-github-actions/auth@v2
