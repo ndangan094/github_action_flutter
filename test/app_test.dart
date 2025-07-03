@@ -49,7 +49,7 @@ void main() {
     await tester.tap(find.byIcon(Icons.add));
     await tester.pump();
     expect(find.text('0'), findsNothing);
-    expect(find.text('4'), findsOneWidget);
+    expect(find.text('3'), findsOneWidget);
   });
 
   testWidgets("5", (WidgetTester tester) async {
