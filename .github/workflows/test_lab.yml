@@ -58,6 +58,7 @@ jobs:
             --test build/app/outputs/apk/androidTest/debug/app-debug-androidTest.apk \
             --device model=komodo,version=34,locale=en,orientation=portrait \
             --timeout 5m \
+            --results-bucket=firebase-testlab-bucket
             --results-dir=integration_test_results
 
       - name: 📤 Upload test artifacts
