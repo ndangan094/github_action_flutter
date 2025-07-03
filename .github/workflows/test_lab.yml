@@ -1,0 +1,69 @@
+name: Firebase Integration Test
+
+on:
+  pull_request:
+    branches:
+      - develop  # hoặc branch bạn muốn bảo vệ
+
+jobs:
+  integration-test:
+    name: Run integration tests on Firebase Test Lab
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # 2. Thiết lập Java (cần thiết cho build Android)
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: 'gradle' # Cache Gradle dependencies
+
+      # 3. Thiết lập Flutter SDK
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.32.0' # Thay bằng phiên bản Flutter bạn đang dùng
+          channel: 'stable' # Hoặc 'beta', 'dev', 'master'
+          cache: true # Cache Flutter dependencies
+
+      - name: 📦 Install dependencies
+        run: flutter pub get
+
+      - name: 🔨 Build debug APK
+        run: flutter build apk --debug
+
+      - name: 🧪 Build Test APK (AndroidTest via Gradle)
+        run: ./gradlew app:assembleAndroidTest
+        working-directory: android
+
+      - name: 🔑 Setup gcloud credentials
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+
+      - name: ☁️ Install gcloud & Firebase Test Lab
+        uses: google-github-actions/setup-gcloud@v2
+        with:
+          project_id: ${{ secrets.FIREBASE_PROJECT_ID }}
+
+      - name: 🚀 Run tests on Firebase Test Lab
+        run: |
+          gcloud firebase test android run \
+            --type instrumentation \
+            --app build/app/outputs/flutter-apk/app-debug.apk \
+            --test build/app/outputs/apk/androidTest/debug/app-debug-androidTest.apk \
+            --device model=komodo,version=34,locale=en,orientation=portrait \
+            --timeout 5m \
+            --results-bucket=firebase-testlab-bucket
+            --results-dir=integration_test_results
+
+      - name: 📤 Upload test artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: firebase-test-results
+          path: integration_test_results
